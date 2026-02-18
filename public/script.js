@@ -7,13 +7,13 @@ import { district, subDistrict } from "./district.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDtOOLO66RbPiaJu8NHeV6dloT1MeUlhM4",
-  authDomain: "test-78d71.firebaseapp.com",
-  projectId: "test-78d71",
-  storageBucket: "test-78d71.firebasestorage.app",
-  messagingSenderId: "37584604720",
-  appId: "1:37584604720:web:712c728408c1ac2c80a7f5",
-  measurementId: "G-EE36ZB4LHR",
+  apiKey: "AIzaSyDuI3VKk-27EB3hfZJ7P6iuRjPnJwD40go",
+  authDomain: "survey-67d52.firebaseapp.com",
+  projectId: "survey-67d52",
+  storageBucket: "survey-67d52.firebasestorage.app",
+  messagingSenderId: "671877691800",
+  appId: "1:671877691800:web:75418dce05b63baaecd3ed",
+  measurementId: "G-TECM36MN2T",
 };
 
 // Initialize Firebase

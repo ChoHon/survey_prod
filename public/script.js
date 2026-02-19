@@ -681,7 +681,7 @@ function fillPageForm(fieldMap, data) {
       if (element) {
         element.value = formatNumber(value);
 
-        if (elementId.includes("sido") || elementId.includes("sigungu")) {
+        if (elementId.includes("sido")) {
           element.dispatchEvent(new Event("input"));
         }
       }
@@ -758,9 +758,7 @@ function addAddressOption(prefix, allowNull = false) {
   const sidoElement = document.getElementById(sidoElementId);
   const sigunguElement = document.getElementById(sigunguElementId);
 
-  let districtForUse;
-  if (allowNull) districtForUse = { 없음: "-", ...district };
-  else districtForUse = district;
+  const districtForUse = allowNull ? { 없음: "-", ...district } : district;
 
   for (const key in districtForUse) {
     const selectOption = document.createElement("option");

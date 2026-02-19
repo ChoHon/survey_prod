@@ -681,7 +681,7 @@ function fillPageForm(fieldMap, data) {
       if (element) {
         element.value = formatNumber(value);
 
-        if (elementId.includes("sido")) {
+        if (elementId.includes("sido") || elementId.includes("sigungu")) {
           element.dispatchEvent(new Event("input"));
         }
       }

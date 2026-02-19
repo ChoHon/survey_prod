@@ -450,16 +450,16 @@ func (b B11) PrintHeader() []string {
 
 func (b B11) PrintString() []string {
 	return []string{
-		fmt.Sprintf("%d", b.Rail.Under3Hours),
-		fmt.Sprintf("%d", b.Rail.UnderB10Hours),
-		fmt.Sprintf("%d", b.Road.Under3Hours),
-		fmt.Sprintf("%d", b.Road.UnderB10Hours),
+		fmt.Sprintf("%0.3f", b.Rail.Under3Hours),
+		fmt.Sprintf("%0.3f", b.Rail.UnderB10Hours),
+		fmt.Sprintf("%0.3f", b.Road.Under3Hours),
+		fmt.Sprintf("%0.3f", b.Road.UnderB10Hours),
 	}
 }
 
 type OTP struct {
-	Under3Hours   int `firestore:"under3Hours,omitempty"`
-	UnderB10Hours int `firestore:"underB10Hours,omitempty"`
+	Under3Hours   float64 `firestore:"under3Hours,omitempty"`
+	UnderB10Hours float64 `firestore:"underB10Hours,omitempty"`
 }
 
 // B12. 귀사가 컨테이너 화물의 운송수단을 선택할 때 고려하는 요인을 중요한 순서대로 3가지만 선택해 주십시오

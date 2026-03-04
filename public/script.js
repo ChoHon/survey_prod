@@ -679,7 +679,7 @@ function fillPageForm(fieldMap, data) {
 
       const element = document.getElementById(elementId);
       if (element) {
-        element.value = formatNumber(value);
+        element.value = formatNumber(value) === "0" ? "" : formatNumber(value);
 
         if (elementId.includes("sido")) {
           element.dispatchEvent(new Event("input"));
@@ -724,6 +724,71 @@ function validatePage(fieldMap) {
       }
 
       showNotification("입력하지 않은 항목이 있습니다", "error");
+
+      // 첫 번째 빈 필드로 스크롤 이동 및 포커스
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// B9 도로본선운송1 필수 입력 검증
+function validateB9RoadMain1() {
+  const cost_ids = ["b9-main1-cost-20ft", "b9-main1-cost-40ft"];
+
+  const daysEl = document.getElementById("b9-main1-days")
+  const daysValue = daysEl?.value?.trim();
+
+  const hoursEl = document.getElementById("b9-main1-hours")
+  const hoursValue = hoursEl?.value?.trim();
+
+  const minutesEl = document.getElementById("b9-main1-minutes")
+  const minutesValue = minutesEl?.value?.trim();
+
+  if (!daysValue && !hoursValue && !minutesValue) {
+    const arrDurationEl = [daysEl, hoursEl, minutesEl];
+    for (const element of arrDurationEl) {
+      if (element) {
+        element.style.borderColor = "red";
+        element.style.borderWidth = "2px";
+
+        element.addEventListener("input", () => {
+          arrDurationEl.forEach((el) => {
+            el.style.borderColor = "";
+            el.style.borderWidth = "";
+          })
+        });
+      }
+    }
+
+    showNotification("입력하지 않은 필수 항목이 있습니다", "error");
+
+    // 첫 번째 빈 필드로 스크롤 이동 및 포커스
+    hoursEl.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    return false;
+  }
+
+  for (const id of cost_ids) {
+    const element = document.getElementById(id)
+    const value = element?.value?.trim();
+
+    if (!value) {
+      // 빈 필드에 시각적 표시
+      if (element) {
+        element.style.borderColor = "red";
+        element.style.borderWidth = "2px";
+
+        element.addEventListener("input", () => {
+          element.style.borderColor = "";
+          element.style.borderWidth = "";
+        });
+      }
+
+      showNotification("입력하지 않은 필수 항목이 있습니다", "error");
 
       // 첫 번째 빈 필드로 스크롤 이동 및 포커스
       element.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -799,7 +864,10 @@ function calcQuestion(defaultData, pickedNum) {
   roadCost *= picked.roadCost;
 
   // 시간 가중치 적용
-  let railDuration = Math.round(defaultData.rail.duration * picked.railDuration * 1000) / 1000;
+  let baseRailDuration =
+    defaultData.rail.duration === 0 ? defaultData.road.duration * 1.2 : defaultData.rail.duration
+
+  let railDuration = Math.round(baseRailDuration * picked.railDuration * 1000) / 1000;
   let roadDuration = Math.round(defaultData.road.duration * picked.roadDuration * 1000) / 1000;
 
   // 화면에 보여지는 값
@@ -1036,6 +1104,11 @@ if (window.location.pathname.includes("b.html")) {
   const nextButton = document.getElementById("b-to-c");
   if (nextButton) {
     nextButton.addEventListener("click", (e) => {
+      if (!validateB9RoadMain1()) {
+        e.preventDefault();
+        return;
+      }
+
       savePageBData();
     });
   }

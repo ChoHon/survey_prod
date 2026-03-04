@@ -39,11 +39,10 @@ func main() {
 
 	if err := exportSurbey(exeDir); err != nil {
 		fmt.Printf("\n오류 발생: %v\n", err)
-
-		fmt.Println("\n엔터를 누르면 종료됩니다...")
-		bufio.NewReader(os.Stdin).ReadBytes('\n')
 	}
 
+	fmt.Println("\n엔터를 누르면 종료됩니다...")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }
 
 func exportSurbey(exeDir string) error {
@@ -115,7 +114,13 @@ func exportSurbey(exeDir string) error {
 	total := 0
 	success := 0
 
-	iter := client.Collection("surveys").Documents(ctx)
+	fmt.Println("5. Firestore 데이터 조회 시작...")
+	
+	queryCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+	
+	iter := client.Collection("surveys").Documents(queryCtx)
+
 	for {
 		doc, err := iter.Next()
 		if err != nil {
@@ -124,8 +129,10 @@ func exportSurbey(exeDir string) error {
 			}
 			return fmt.Errorf("문서 조회 실패: %w", err)
 		}
-
+		
 		total++
+		
+		fmt.Printf("6-%3d. Document 불러오기 성공 \n", total)
 
 		func() {
 			defer func() {
@@ -133,6 +140,7 @@ func exportSurbey(exeDir string) error {
 					fmt.Printf("⚠️  문서 처리 중 panic 발생 (ID: %s): %v\n", doc.Ref.ID, r)
 				}
 			}()
+
 
 			var survey structs.Survey
 			if err := doc.DataTo(&survey); err != nil {
@@ -171,10 +179,11 @@ func exportSurbey(exeDir string) error {
 			}
 
 			success++
+			fmt.Printf("6-%3d. Document 쓰기 성공 \n", total)
 		}()
 	}
 
-	fmt.Printf("5. CSV 데이터 쓰기 완료(%d/%d)\n", success, total)
+	fmt.Printf("7. CSV 데이터 쓰기 완료(%d/%d)\n", success, total)
 
 	return nil
 }
